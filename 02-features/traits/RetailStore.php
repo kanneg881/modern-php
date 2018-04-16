@@ -1,7 +1,11 @@
 <?php
+/**
+ * 零售店
+ */
+
 class RetailStore
 {
     use Geocodable;
 
-    // Class implementation goes here
+    // 此處是類別實作
 }

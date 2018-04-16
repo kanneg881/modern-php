@@ -5,18 +5,19 @@ require 'HtmlDocument.php';
 require 'StreamDocument.php';
 require 'CommandOutputDocument.php';
 
+/** @var DocumentStore $documentStore 實體文件 */
 $documentStore = new DocumentStore();
 
-// Add HTML document
-$htmlDoc = new HtmlDocument('http://php.net');
-$documentStore->addDocument($htmlDoc);
+/** @var HtmlDocument $htmlDocument HTML 文件*/
+$htmlDocument = new HtmlDocument('http://php.net');
+$documentStore->addDocument($htmlDocument);
 
-// Add stream document
-$streamDoc = new StreamDocument(fopen('stream.txt', 'rb'));
-$documentStore->addDocument($streamDoc);
+/** @var StreamDocument $streamDocument 增加串流文件 */
+$streamDocument = new StreamDocument(fopen('stream.txt', 'rb'));
+$documentStore->addDocument($streamDocument);
 
-// Add terminal command document
-$cmdDoc = new CommandOutputDocument('cat /etc/hosts');
-$documentStore->addDocument($cmdDoc);
+/** @var CommandOutputDocument $commandDocument 增加終端指令文件 */
+$commandDocument = new CommandOutputDocument('cat /etc/hosts');
+$documentStore->addDocument($commandDocument);
 
 print_r($documentStore->getDocuments());
