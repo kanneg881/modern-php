@@ -1,15 +1,20 @@
 <?php
 require 'vendor/autoload.php';
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
-date_default_timezone_set('America/New_York');
+date_default_timezone_set('Asia/Taipei');
 
-// Prepare logger
+/** @var Logger $log log物件 */
 $log = new Logger('myApp');
-$log->pushHandler(new StreamHandler('logs/development.log', Logger::DEBUG));
-$log->pushHandler(new StreamHandler('logs/production.log', Logger::WARNING));
+
+try {
+    $log->pushHandler(new StreamHandler('logs/development.log', Logger::DEBUG));
+    $log->pushHandler(new StreamHandler('logs/production.log', Logger::WARNING));
+} catch (Exception $exception) {
+    echo $exception->getMessage();
+}
 
 // Use logger
 $log->debug('This is a debug message');
