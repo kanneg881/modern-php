@@ -1,44 +1,47 @@
 <?php
 /**
- * An example of a project-specific implementation.
+ * 一個指定專案實作的例子
  *
- * After registering this autoload function with SPL, the following line
- * would cause the function to attempt to load the \Foo\Bar\Baz\Qux class
- * from /path/to/project/src/Bar/Baz/Qux.php:
+ * 使用SPL註冊該自動加載功能後，以下行會引起該函式嘗試載入 \Foo\Bar 類別
+ * 從 /path/to/project/src/Bar.php:
  *
- *      new \Foo\Bar\Baz\Qux;
- *
- * @param string $class The fully-qualified class name.
+ * @param string $class 完全合格的類別名稱。
  * @return void
  */
-spl_autoload_register(function ($class) {
+spl_autoload_register(
+    function ($class) {
 
-    // project-specific namespace prefix
-    $prefix = 'Foo\\';
+        /** @var string $prefix 指定專案的名稱空間字首 */
+        $prefix = 'Foo\\';
 
-    // base directory for the namespace prefix
-    $base_dir = __DIR__ . '/src/';
+        /** @var string $base_dir 名稱空間字首的基底目錄 */
+        $base_dir = __DIR__ . '/src/';
 
-    // does the class use the namespace prefix?
-    $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        // no, move to the next registered autoloader
-        return;
+        /** @var bool $length 這個類別使用了名稱空間的字首嗎 */
+        $length = strlen($prefix);
+
+        // 若沒有，移到下一個註冊的自動載入器
+        if (strncmp($prefix, $class, $length) !== 0) {
+            return;
+        }
+
+        // 取得相關的類別名稱
+        $relative_class = substr($class, $length);
+
+        /**
+         * 將名稱空間字首替換成基底目錄，在相關類別名稱中
+         * 將名稱空間分隔字元替換成目錄分隔字元並加上.php
+         *
+         * @var string $file class 檔
+         */
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+        // 如果這個檔案存在，匯入它
+        if (file_exists($file)) {
+            require $file;
+        }
     }
-
-    // get the relative class name
-    $relative_class = substr($class, $len);
-
-    // replace the namespace prefix with the base directory, replace namespace
-    // separators with directory separators in the relative class name, append
-    // with .php
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-
-    // if the file exists, require it
-    if (file_exists($file)) {
-        require $file;
-    }
-});
+);
 
 $bar = new \Foo\Bar();
 $bar->sayHello();
