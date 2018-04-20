@@ -1,3 +1,4 @@
 <?php
-$input = '<p><script>alert("You won the Nigerian lottery!");</script></p>';
+/** @var string $input 輸入 */
+$input = '<p><script>alert("你贏得了奈及利亞彩票!");</script></p>';
 echo htmlentities($input, ENT_QUOTES, 'UTF-8');

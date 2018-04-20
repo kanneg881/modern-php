@@ -1,8 +1,11 @@
 <?php
+/** @var string $input 輸入 */
 $input = 'john@example.com';
+/** @var bool $isEmail 是否為合格的email */
 $isEmail = filter_var($input, FILTER_VALIDATE_EMAIL);
+
 if ($isEmail !== false) {
-    echo "Success";
+    echo "成功";
 } else {
-    echo "Fail";
+    echo "失敗";
 }

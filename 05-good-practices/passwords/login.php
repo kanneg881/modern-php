@@ -1,46 +1,52 @@
 <?php
+require_once "User.php";
+
 session_start();
+
 try {
-    // Get email address from request body
+    /** @var mixed $email 從請求中取得電子郵件位址 */
     $email = filter_input(INPUT_POST, 'email');
 
-    // Get password from request body
+    /** @var mixed $password 從請求中取得密碼 */
     $password = filter_input(INPUT_POST, 'password');
 
-    // Find account with email address (THIS IS PSUEDO-CODE)
+    // 用電子郵件位址查找密碼 (這是虛擬碼)
     $user = User::findByEmail($email);
 
-    // Verify password with account password hash
-    if (password_verify($password, $user->password_hash) === false) {
-        throw new Exception('Invalid password');
+    // 用帳戶密碼的雜湊值驗證密碼
+    if (password_verify($password, $user->passwordHash) === false) {
+        throw new Exception('無效的密碼');
     }
 
-    // Re-hash password if necessary (see note below)
-    $currentHashAlgorithm = PASSWORD_DEFAULT;
-    $currentHashOptions = array('cost' => 15);
+    /** @var int $hashAlgorithm 雜湊演算法 */
+    $hashAlgorithm = PASSWORD_DEFAULT;
+    /** @var array $hashOptions 雜湊演選項 */
+    $hashOptions = array('cost' => 15);
+    /** @var bool $passwordNeedsRehash 必要時重新雜湊密碼（查看以下筆記） */
     $passwordNeedsRehash = password_needs_rehash(
-        $user->password_hash,
-        $currentHashAlgorithm,
-        $currentHashOptions
+        $user->passwordHash,
+        $hashAlgorithm,
+        $hashOptions
     );
+
     if ($passwordNeedsRehash === true) {
-        // Save new password hash (THIS IS PSUEDO-CODE)
-        $user->password_hash = password_hash(
+        // 儲存新的密碼雜湊（這是虛擬碼）
+        $user->passwordHash = password_hash(
             $password,
-            $currentHashAlgorithm,
-            $currentHashOptions
+            $hashAlgorithm,
+            $hashOptions
         );
         $user->save();
     }
 
-    // Save login status to session
+    // 儲存登入狀態到 session
     $_SESSION['user_logged_in'] = 'yes';
     $_SESSION['user_email'] = $email;
 
-    // Redirect to profile page
+    // 重新導向到個人資料頁面
     header('HTTP/1.1 302 Redirect');
-    header('Location: /user-profile.php');
-} catch (Exception $e) {
+    header('Location: ./userProfile.php');
+} catch (Exception $exception) {
     header('HTTP/1.1 401 Unauthorized');
-    echo $e->getMessage();
+    echo $exception->getMessage();
 }
