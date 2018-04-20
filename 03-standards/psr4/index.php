@@ -14,8 +14,8 @@ spl_autoload_register(
         /** @var string $prefix 指定專案的名稱空間字首 */
         $prefix = 'Foo\\';
 
-        /** @var string $base_dir 名稱空間字首的基底目錄 */
-        $base_dir = __DIR__ . '/src/';
+        /** @var string $baseDir 名稱空間字首的基底目錄 */
+        $baseDir = __DIR__ . '/src/';
 
         /** @var bool $length 這個類別使用了名稱空間的字首嗎 */
         $length = strlen($prefix);
@@ -26,7 +26,7 @@ spl_autoload_register(
         }
 
         // 取得相關的類別名稱
-        $relative_class = substr($class, $length);
+        $relativeClass = substr($class, $length);
 
         /**
          * 將名稱空間字首替換成基底目錄，在相關類別名稱中
@@ -34,7 +34,7 @@ spl_autoload_register(
          *
          * @var string $file class 檔
          */
-        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
 
         // 如果這個檔案存在，匯入它
         if (file_exists($file)) {
