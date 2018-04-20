@@ -13,7 +13,7 @@ try {
     // 用電子郵件位址查找密碼 (這是虛擬碼)
     $user = User::findByEmail($email);
 
-    // 用帳戶密碼的雜湊值驗證密碼
+    // 用帳戶密碼的雜湊值驗證密碼，測試密碼 12345678
     if (password_verify($password, $user->passwordHash) === false) {
         throw new Exception('無效的密碼');
     }
