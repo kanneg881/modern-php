@@ -34,8 +34,8 @@ class User
     {
         // 實作在這裡
 
-        /** @var string $passwordHash 密碼雜湊 */
-        $passwordHash = '12345678';
+        /** @var string $passwordHash 密碼 12345678 的雜湊 */
+        $passwordHash = '$2y$12$WFOaBwhKk4O.5bjD0vMdaO.rjaSxTuqC5jiNPPEFp5roDQxhzm.gi';
 
         return new User($email, $passwordHash);
     }
