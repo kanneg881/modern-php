@@ -1,6 +1,8 @@
 <?php
-date_default_timezone_set('America/New_York');
+date_default_timezone_set('Asia/Taipei');
 
-$timezone = new DateTimeZone('America/New_York');
-$datetime = new \DateTime('2014-08-20', $timezone);
-$datetime->setTimezone(new DateTimeZone('Asia/Hong_Kong'));
+/** @var DateTimeZone $timezone 時區 */
+$timezone = new DateTimeZone('Asia/Taipei');
+/** @var DateTime $datetime 日期時間 */
+$datetime = new DateTime('2018-04-21', $timezone);
+$datetime->setTimezone(new DateTimeZone('Asia/Taipei'));
