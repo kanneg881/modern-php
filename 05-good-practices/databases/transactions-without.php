@@ -1,8 +1,8 @@
 <?php
 require 'settings.php';
 
-// PDO connection
 try {
+    /** @var PDO $pdo 資料庫物件 */
     $pdo = new PDO(
         sprintf(
             'mysql:host=%s;dbname=%s;port=%s;charset=%s',
@@ -15,33 +15,37 @@ try {
         $settings['password']
     );
 } catch (PDOException $e) {
-    // Database connection failed
-    echo "Database connection failed";
+    echo "資料庫連線失敗";
     exit;
 }
 
-// Statements
-$stmtSubtract = $pdo->prepare('
+/** @var PDOStatement|bool $statementSubtract 預備陳述式減去 */
+$statementSubtract = $pdo->prepare('
     UPDATE accounts
     SET amount = amount - :amount
     WHERE name = :name
 ');
-$stmtAdd = $pdo->prepare('
+/** @var PDOStatement|bool $statementAdd 預備陳述式減去 */
+$statementAdd = $pdo->prepare('
     UPDATE accounts
     SET amount = amount + :amount
     WHERE name = :name
 ');
 
-// Withdraw funds from account 1
+// 從帳戶 1 抽取一筆資金
+/** @var string $fromAccount 來自的帳戶 */
 $fromAccount = 'Checking';
+/** @var int $withdrawal 抽取的資金 */
 $withdrawal = 50;
-$stmtSubtract->bindParam(':name', $fromAccount);
-$stmtSubtract->bindParam(':amount', $withDrawal, PDO::PARAM_INT);
-$stmtSubtract->execute();
+$statementSubtract->bindParam(':name', $fromAccount);
+$statementSubtract->bindParam(':amount', $withdrawal, PDO::PARAM_INT);
+$statementSubtract->execute();
 
-// Deposit funds into account 2
+// 將資金存入帳戶 2
+/** @var string $toAccount 存入的帳戶 */
 $toAccount = 'Savings';
+/** @var int $deposit 存入的資金 */
 $deposit = 50;
-$stmtAdd->bindParam(':name', $toAccount);
-$stmtAdd->bindParam(':amount', $deposit, PDO::PARAM_INT);
-$stmtAdd->execute();
+$statementAdd->bindParam(':name', $toAccount);
+$statementAdd->bindParam(':amount', $deposit, PDO::PARAM_INT);
+$statementAdd->execute();

@@ -1,8 +1,8 @@
 <?php
 require 'settings.php';
 
-// PDO connection
 try {
+    /** @var PDO $pdo 資料庫物件 */
     $pdo = new PDO(
         sprintf(
             'mysql:host=%s;dbname=%s;port=%s;charset=%s',
@@ -14,15 +14,16 @@ try {
         $settings['username'],
         $settings['password']
     );
-} catch (PDOException $e) {
-    // Database connection failed
-    echo "Database connection failed";
+} catch (PDOException $exception) {
+    echo "資料庫連線失敗";
     exit;
 }
 
-// Prepared statement
-$sql = 'SELECT email FROM users WHERE id = :id';
+/** @var string $query 資料庫查詢 */
+$query = 'SELECT email FROM users WHERE id = :id';
+/** @var string $userId 使用者 id */
 $userId = filter_input(INPUT_GET, 'id');
 
-$statement = $pdo->prepare($sql);
+/** @var PDOStatement|bool $statement 預備陳述式 */
+$statement = $pdo->prepare($query);
 $statement->bindValue(':id', $userId, PDO::PARAM_INT);

@@ -1,12 +1,16 @@
 <?php
-date_default_timezone_set('America/New_York');
+date_default_timezone_set('Asia/Taipei');
 
-// Create DateTime instance
-$datetime = new DateTime('2014-01-01 14:00:00');
+/** @var DateTime $datetime 建立日期時間實體 */
+$datetime = new DateTime();
 
-// Create two weeks interval
-$interval = new DateInterval('P2W');
+try {
+    /** @var DateInterval $interval 建立兩週區間 */
+    $interval = new DateInterval('P2W');
+} catch (Exception $exception) {
+    echo $exception->getMessage();
+}
 
-// Modify DateTime instance
+// 更動日期時間實體
 $datetime->add($interval);
 echo $datetime->format('Y-m-d H:i:s');

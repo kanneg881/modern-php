@@ -2,6 +2,7 @@
 require 'settings.php';
 
 try {
+    /** @var PDO $pdo 資料庫物件 */
     $pdo = new PDO(
         sprintf(
             'mysql:host=%s;dbname=%s;port=%s;charset=%s',
@@ -13,8 +14,7 @@ try {
         $settings['username'],
         $settings['password']
     );
-} catch (PDOException $e) {
-    // Database connection failed
-    echo "Database connection failed";
+} catch (PDOException $exception) {
+    echo "資料庫連線失敗";
     exit;
 }
