@@ -1,33 +1,37 @@
 <?php
-// Create custom filter
+
+// 建立客製過濾器
 class DirtyWordsFilter extends php_user_filter
 {
     /**
-     * @param resource $in       Incoming bucket brigade
-     * @param resource $out      Outgoing bucket brigade
-     * @param int      $consumed Number of bytes consumed
-     * @param bool     $closing  Last bucket brigade in stream?
+     * 過濾器
+     *
+     * @param resource $in 進來的 bucket brigade
+     * @param resource $out 出去的 bucket brigade
+     * @param int $consumed 消耗的字元數
+     * @param bool $closing 串流中的最後一個桶隊?
+     * @return int 返回代碼指示用戶空間過濾器以 $out 的形式返回 bucket。
      */
     public function filter($in, $out, &$consumed, $closing)
     {
-        $words = array('grime', 'dirt', 'grease');
-        $wordData = array();
-        foreach ($words as $word) {
+        /** @var array $dirtyWords 不雅的字 */
+        $dirtyWords = array('grime', 'dirt', 'grease');
+        /** @var array $replaceWords 取代成 * 文字 */
+        $replaceWords = array();
+
+        foreach ($dirtyWords as $word) {
+            /** @var array $replacement 每一個字一個索引鍵值為 * */
             $replacement = array_fill(0, mb_strlen($word), '*');
-            $wordData[$word] = implode('', $replacement);
+            $replaceWords[] = implode('', $replacement);
         }
-        $bad = array_keys($wordData);
-        $good = array_values($wordData);
 
-        // Iterate each bucket from incoming bucket brigade
+        // 從進來的 bucket brigade 中迭代每個 bucket
         while ($bucket = stream_bucket_make_writeable($in)) {
-            // Censor dirty words in bucket data
-            $bucket->data = str_replace($bad, $good, $bucket->data);
-
-            // Increment total data consumed
+            // 在 bucket 資料中過濾掉不雅字詞
+            $bucket->data = str_replace($dirtyWords, $replaceWords, $bucket->data);
+            // 增加讀取的資料總數
             $consumed += $bucket->datalen;
-
-            // Send bucket to downstream brigade
+            // 將 bucket 發送到下游的 brigade
             stream_bucket_append($out, $bucket);
         }
 
@@ -36,9 +40,10 @@ class DirtyWordsFilter extends php_user_filter
 }
 stream_filter_register('dirty_words_filter', 'DirtyWordsFilter');
 
-// Use custom filter
+/** @var resource|bool $handle 使用客製過濾器 */
 $handle = fopen('data.txt', 'rb');
 stream_filter_append($handle, 'dirty_words_filter');
+
 while (feof($handle) !== true) {
     echo fgets($handle);
 }

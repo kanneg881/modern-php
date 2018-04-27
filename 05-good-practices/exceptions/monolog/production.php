@@ -1,28 +1,31 @@
 <?php
-// Use Composer autoloader
 require 'vendor/autoload.php';
 
-// Import Monolog namespaces
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SwiftMailerHandler;
 
-date_default_timezone_set('America/New_York');
+ini_set("SMTP","ssl://smtp.gmail.com");
+ini_set("smtp_port","465");
+date_default_timezone_set('Asia/Taipei');
 
-// Setup Monolog and basic handler
+/** @var Logger $log Monolog 記錄器 */
 $log = new Logger('my-app-name');
 $log->pushHandler(new StreamHandler('logs/production.log', Logger::WARNING));
 
-// Add SwiftMailer handler for critical errors
-$transport = \Swift_SmtpTransport::newInstance('smtp.example.com', 587)
-             ->setUsername('USERNAME')
-             ->setPassword('PASSWORD');
-$mailer = \Swift_Mailer::newInstance($transport);
-$message = \Swift_Message::newInstance()
-           ->setSubject('Website error!')
-           ->setFrom(array('daemon@example.com' => 'John Doe'))
-           ->setTo(array('admin@example.com'));
+// 為嚴重錯誤加上 SwiftMailer 處理器
+/** @var Swift_SendmailTransport $transport 傳輸 */
+$transport = Swift_SmtpTransport::newInstance('ssl://smtp.gmail.com', 465)
+             ->setUsername('gamilAccount@gmail.com')
+             ->setPassword('googleAppPassword');
+/** @var Swift_Mailer $mailer SwiftMailer 處理器 */
+$mailer = Swift_Mailer::newInstance($transport);
+/** @var Swift_Message $message 訊息 */
+$message = Swift_Message::newInstance()
+           ->setSubject('網站錯誤!')
+           ->setFrom(array('from@gmail.com' => 'YourName'))
+           ->setTo(array('to@gmail.com'));
 $log->pushHandler(new SwiftMailerHandler($mailer, $message, Logger::CRITICAL));
 
-// Use logger
-$log->critical('The server is on fire!');
+// 使用記錄器
+$log->critical('伺服器著火了!');

@@ -1,12 +1,12 @@
 <?php
-// Register your exception handler
-set_exception_handler(function (Exception $e) {
-    // Handle and log exception
-    echo "Handling exception: " . $e->getMessage();
+// 註冊你的例外處理器
+set_exception_handler(function (Exception $exception) {
+    // 處理並記錄例外
+    echo "處理例外: " . $exception->getMessage();
 });
 
-// Your code goes here...
-throw new \Exception("Someting went wrong!");
+// 你的程式碼在此...
+throw new Exception("發生了一些錯誤!");
 
-// Restore previous exception handler
+// 回復原本的例外處理器
 restore_exception_handler();
