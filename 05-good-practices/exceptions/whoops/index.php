@@ -1,10 +1,12 @@
 <?php
-// Use composer autoloader
 require 'vendor/autoload.php';
 
-// Setup Whoops error and exception handlers
-$whoops = new \Whoops\Run;
-$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+use Whoops\Run;
+use Whoops\Handler\PrettyPageHandler;
+
+/** @var Run $whoops 設定 Whoops 錯誤和例外處理 */
+$whoops = new Run;
+$whoops->pushHandler(new PrettyPageHandler);
 $whoops->register();
 
-throw new \Exception('This is an exception!');
+throw new Exception('這是一個例外!');

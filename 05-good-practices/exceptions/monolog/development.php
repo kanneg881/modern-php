@@ -1,14 +1,12 @@
 <?php
-// Use Composer autoloader
 require 'vendor/autoload.php';
 
-// Import Monolog namespaces
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-// Setup Monolog logger
-$log = new Logger('my-app-name');
+/** @var Logger $log Monolog 記錄器 */
+$log = new Logger('我的應用程式名稱');
 $log->pushHandler(new StreamHandler('logs/development.log', Logger::WARNING));
 
-// Use logger
-$log->warning('This is a warning!');
+// 使用記錄器
+$log->warning('這是一個警告!');
